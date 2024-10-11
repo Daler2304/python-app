@@ -66,7 +66,7 @@ def handle_client(client_socket, addr):
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', 2304))
+    server_socket.bind(('localhost', 8080))
     server_socket.listen(5)
     print('Сервер запущен. Ожидание подключения...')
 
