@@ -1,6 +1,6 @@
 import socket
 import threading
-import os
+import os, random
 
 # Список для хранения подключенных клиентов
 online = []
@@ -60,13 +60,16 @@ def handle_client(client_socket, addr):
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # Получаем порт из переменной окружения или используем 3000 по умолчанию
-    PORT = int(os.getenv('PORT', 3000))
-    server_socket.bind(('0.0.0.0', PORT))
-    server_socket.listen(5)
-    print(f'Сервер запущен на порту {PORT}. Ожидание подключения...')
-
+    flag = True
+    while flag:
+        try:# Получаем порт из переменной окружения или используем 3000 по умолчанию
+            PORT = int(os.getenv('PORT', random.randint(1000, 9999))
+            server_socket.bind(('0.0.0.0', PORT))
+            server_socket.listen(5)
+            print(f'Сервер запущен на порту {PORT}. Ожидание подключения...')
+            flag = False
+        except:
+            print('Нет свободных портов')
     while True:
         client_socket, addr = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, addr))
