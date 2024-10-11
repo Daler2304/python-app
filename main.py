@@ -41,6 +41,11 @@ def handle_client(client_socket, addr):
                 else:
                     client_socket.send(f'Пользователь {target_user_id} не найден.'.encode('utf-8'))
 
+            elif message.startswith('/online'):
+                # Обработка команды /online
+                online_users = ', '.join(str(uid) for uid in online)
+                client_socket.send(f'Онлайн пользователи: {online_users}'.encode('utf-8'))
+
             elif connected_client is not None:
                 # Если пользователь подключен, отправляем сообщение ему
                 target_socket = clients[connected_client]
@@ -70,6 +75,7 @@ def start_server():
             flag = False
         except:
             print('Нет свободных портов')
+
     while True:
         client_socket, addr = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, addr))
