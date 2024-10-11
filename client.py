@@ -15,7 +15,7 @@ def receive_messages(client_socket):
 
 def start_client():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('localhost', 9090))
+    client_socket.connect(('89.111.155.205', 2304))
 
     user_id = client_socket.getsockname()[1]
     print(f'Ваш ID: {user_id}')
