@@ -62,7 +62,7 @@ def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Получаем порт из переменной окружения или используем 3000 по умолчанию
-    PORT = int(os.getenv('PORT', 2304))
+    PORT = int(os.getenv('PORT', 3000))
     server_socket.bind(('0.0.0.0', PORT))
     server_socket.listen(5)
     print(f'Сервер запущен на порту {PORT}. Ожидание подключения...')
