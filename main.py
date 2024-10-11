@@ -6,14 +6,6 @@ import threading
 conn = sqlite3.connect('base.db', check_same_thread=False)
 cursor = conn.cursor()
 
-# Создаем таблицу, если она не существует
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY
-)
-''')
-conn.commit()
-
 # Словарь для хранения подключенных клиентов
 clients = {}
 
@@ -74,7 +66,7 @@ def handle_client(client_socket, addr):
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', 9090))
+    server_socket.bind(('localhost', 2304))
     server_socket.listen(5)
     print('Сервер запущен. Ожидание подключения...')
 
