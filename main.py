@@ -1,27 +1,22 @@
 import socket
-import sqlite3
 import threading
-import os
 
-# Создаем или подключаемся к базе данных
-conn = sqlite3.connect('base.db', check_same_thread=False)
-cursor = conn.cursor()
+# Список для хранения подключенных клиентов
+online = []
 
-# Словарь для хранения подключенных клиентов
+# Словарь для хранения подключенных клиентов по user_id
 clients = {}
 
 def handle_client(client_socket, addr):
     print(f'Подключено к {addr}')
 
-    # Добавляем пользователя в базу данных
-    user_id = addr[1]  # Используем номер порта как user_id
-    cursor.execute('SELECT user_id FROM users WHERE user_id=?', (user_id,))
+    # Используем номер порта как user_id
+    user_id = addr[1]
 
-    if cursor.fetchone():
+    if user_id in online:
         print(f'Пользователь {user_id} уже онлайн.')
     else:
-        cursor.execute('INSERT INTO users(user_id) VALUES(?)', (user_id,))
-        conn.commit()
+        online.append(user_id)
 
     # Сохраняем сокет клиента в словаре
     clients[user_id] = client_socket
@@ -56,18 +51,16 @@ def handle_client(client_socket, addr):
         print(f'Ошибка при обработке клиента {addr}: {e}')
 
     finally:
-        # Закрываем соединение и удаляем пользователя из базы данных
+        # Закрываем соединение и удаляем пользователя из списка и словаря
         client_socket.close()
         print(f'Connection with {addr} closed!')
-        cursor.execute('DELETE FROM users WHERE user_id=?', (user_id,))
-        conn.commit()
-        del clients[user_id]  # Удаляем пользователя из словаря
-
+        online.remove(user_id)
+        del clients[user_id]
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Получаем порт из переменной окружения
+    # Получаем порт из переменной окружения или используем 3000 по умолчанию
     PORT = int(os.getenv('PORT', 3000))
     server_socket.bind(('0.0.0.0', PORT))
     server_socket.listen(5)
