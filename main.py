@@ -63,7 +63,7 @@ def start_server():
     flag = True
     while flag:
         try:# Получаем порт из переменной окружения или используем 3000 по умолчанию
-            PORT = int(os.getenv('PORT', random.randint(1000, 9999))
+            PORT = int(os.getenv('PORT', random.randint(1000, 9999)))
             server_socket.bind(('0.0.0.0', PORT))
             server_socket.listen(5)
             print(f'Сервер запущен на порту {PORT}. Ожидание подключения...')
