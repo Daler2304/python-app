@@ -1,5 +1,6 @@
 import socket
 import threading
+import os
 
 # Список для хранения подключенных клиентов
 online = []
