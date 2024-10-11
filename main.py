@@ -1,6 +1,7 @@
 import socket
 import sqlite3
 import threading
+import os
 
 # Создаем или подключаемся к базе данных
 conn = sqlite3.connect('base.db', check_same_thread=False)
@@ -8,7 +9,6 @@ cursor = conn.cursor()
 
 # Словарь для хранения подключенных клиентов
 clients = {}
-
 
 def handle_client(client_socket, addr):
     print(f'Подключено к {addr}')
@@ -66,15 +66,17 @@ def handle_client(client_socket, addr):
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', 3000))
+
+    # Получаем порт из переменной окружения
+    PORT = int(os.getenv('PORT', 3000))
+    server_socket.bind(('0.0.0.0', PORT))
     server_socket.listen(5)
-    print('Сервер запущен. Ожидание подключения...')
+    print(f'Сервер запущен на порту {PORT}. Ожидание подключения...')
 
     while True:
         client_socket, addr = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, addr))
         client_thread.start()
-
 
 if __name__ == '__main__':
     start_server()
